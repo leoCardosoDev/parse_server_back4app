@@ -1,5 +1,17 @@
 const Professional = Parse.Object.extend("Professional")
 const Specialty = Parse.Object.extend("Specialty")
+
+Parse.Cloud.define('v1-sign-in', async (req) => {
+  const user = await Parse.User.logIn(req.params.email.toLowerCase(), req.params.password)
+  return formatUser(user.toJSON())
+}, {
+  fields: {
+    email: { required: true },
+    password: { required: true },
+  }
+})
+
+
 Parse.Cloud.define("v1-get-professionals", async (req) => {
 	const query = new Parse.Query(Professional)
   query.include(['specialties', 'insurances', 'services'])
@@ -38,5 +50,15 @@ function formatProfissional(p) {
     id: p.objectId,
     name: p.name,
     specialies: p.specialies.map((s) => formatSpecialty(s))
+  }
+}
+
+function formatUser (u) {
+  return {
+    id: u.objectId,
+    token: u.sessionToken,
+    fullname: u.fullname,
+    document: u.document,
+    phone: u.phone
   }
 }
