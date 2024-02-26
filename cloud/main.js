@@ -11,6 +11,9 @@ Parse.Cloud.define('v1-sign-in', async (req) => {
   }
 })
 
+Parse.Cloud.define('v1-get-user', async (req) => {
+  return req.user
+})
 
 Parse.Cloud.define('v1-sign-up', async (req) => {
   const user = new Parse.User()
