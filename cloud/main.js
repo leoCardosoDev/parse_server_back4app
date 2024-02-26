@@ -12,6 +12,26 @@ Parse.Cloud.define('v1-sign-in', async (req) => {
 })
 
 
+Parse.Cloud.define('v1-sign-up', async (req) => {
+  const user = new Parse.User()
+  user.set('email', req.params.email.toLowerCase())
+  user.set('username', req.params.email.toLowerCase())
+  user.set('password', req.params.password)
+  user.set('fullname', req.params.fullname)
+  user.set('document', req.params.document)
+  user.set('phone', req.params.phone)
+  await user.signUp(null, { useMasterKey: true })
+  return formatUser(user.toJSON())
+}, {
+  fields: {
+    email: { required: true },
+    password: { required: true },
+    fullname: { required: true },
+    document: { required: true },
+    phone: { required: true },
+  }
+})
+
 Parse.Cloud.define("v1-get-professionals", async (req) => {
 	const query = new Parse.Query(Professional)
   query.include(['specialties', 'insurances', 'services'])
